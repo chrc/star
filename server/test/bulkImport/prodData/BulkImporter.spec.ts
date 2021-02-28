@@ -14,6 +14,7 @@ import {MV} from '../../../src/models/MV';
 import {EDP} from '../../../src/models/EDP';
 import {PowerPlanEnergySchedule} from '../../../src/models/PowerPlanEnergySchedule';
 import {OrderActivationDocument} from '../../../src/models/OrderActivationDocument';
+import {TimeoutDuration} from '../../enums/timeoutDuration.enum';
 
 // LOCAL
 const BASE_URL_TSO: string = 'http://localhost:5000';
@@ -80,7 +81,8 @@ const orderActivationDocumentEndData20200117: OrderActivationDocument[] = requir
 const orderActivationDocumentEndData20200204: any[] = require('./asset/20200204/orderActivationDocumentEnd.json');
 
 describe('Bulk Import', function(): void {
-  jest.setTimeout(1201000000);
+  // jest.setTimeout(1201000000);
+  jest.setTimeout(TimeoutDuration.fiftySeconds);
 
   beforeAll(async () => {
     const response = await axios.post(
@@ -1469,7 +1471,7 @@ describe('Bulk Import', function(): void {
         eda.edaRegisteredResourceId
       );
       expect(response.data.a46Name).equal(eda.a46Name);
-      expect(response.data.name).equal(eda.edaRegisteredResourceName);
+      expect(response.data.edaRegisteredResourceName).equal(eda.edaRegisteredResourceName);
       expect(response.data.a46IEC).equal(eda.a46IEC);
       expect(response.data.edaRegisteredResourceMrid).equal(
         eda.edaRegisteredResourceMrid

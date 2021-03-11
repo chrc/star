@@ -24,7 +24,7 @@ export class BidComponent {
   public uploadedPowerPlanEnergyScheduleIds: string[] = [];
   public uploadedBidIds: string[] = [];
   public displayError = false;
-  public displaySuccessBid = false;
+  public displaySuccessBid = true;
   public displaySuccessPowerPlanEnergySchedule = false;
   public message = '';
 

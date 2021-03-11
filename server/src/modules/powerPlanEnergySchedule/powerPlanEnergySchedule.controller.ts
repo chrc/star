@@ -13,7 +13,8 @@ import {
   Post,
   Put,
   UploadedFile,
-  UseGuards
+  UseGuards,
+  UseInterceptors
 } from '@nestjs/common';
 import {
   ApiBearerAuth,
@@ -55,7 +56,7 @@ export class PowerPlanEnergyScheduleController {
   }
 
   @Post('/csv-upload')
-  @UseGuards(FileInterceptor('csv', {dest: '/upload/csv/'}))
+  @UseInterceptors(FileInterceptor('csv', {dest: '/upload/csv/'}))
   public async createPowerPlanEnergySchedulesFromCSV(
     @UploadedFile() file: any
   ): Promise<any> {

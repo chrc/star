@@ -13,7 +13,8 @@ import {
   Post,
   Put,
   UploadedFile,
-  UseGuards
+  UseGuards,
+  UseInterceptors
 } from '@nestjs/common';
 import {
   ApiBearerAuth,
@@ -47,7 +48,7 @@ export class ComptageHVController {
   }
 
   @Post('/csv-upload')
-  @UseGuards(FileInterceptor('csv', {dest: '/upload/csv/'}))
+  @UseInterceptors(FileInterceptor('csv', {dest: '/upload/csv/'}))
   public async createHVFromCSV(@UploadedFile() file: any): Promise<any> {
     const hvs: HVDto[] = await CSVParser.parse<HVDto>(file.path);
 

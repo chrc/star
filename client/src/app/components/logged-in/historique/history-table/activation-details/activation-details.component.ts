@@ -137,7 +137,7 @@ export class ActivationDetailsComponent implements OnInit {
     this._bidService
       .getBidByBidRegisteredResourceMrid(bidRegisteredResourceMrid)
       .subscribe((response) => {
-        new FileHandler().download(response.results);
+        new FileHandler().download(response);
       });
   }
 

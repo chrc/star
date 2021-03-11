@@ -13,7 +13,8 @@ import {
   Post,
   Put,
   UploadedFile,
-  UseGuards
+  UseGuards,
+  UseInterceptors
 } from '@nestjs/common';
 import {
   ApiBearerAuth,
@@ -47,7 +48,7 @@ export class ComptageMVController {
   }
 
   @Post('/csv-upload')
-  @UseGuards(FileInterceptor('csv', {dest: '/upload/csv/'}))
+  @UseInterceptors(FileInterceptor('csv', {dest: '/upload/csv/'}))
   public async createMVFromCSV(@UploadedFile() file: any): Promise<any> {
     const mvs: MVDto[] = await CSVParser.parse<MVDto>(file.path);
 

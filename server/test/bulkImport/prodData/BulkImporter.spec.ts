@@ -45,6 +45,7 @@ const bidData20191231: Bid[] = require('./asset/20191231/bid.json');
 const bidData20200101: Bid[] = require('./asset/20200101/bid.json');
 const bidData20200117: Bid[] = require('./asset/20200117/bid.json');
 const bidData20200204: Bid[] = require('./asset/20200204/bid.json');
+const bidData20210324: Bid[] = require('./asset/20210324/bid.json');
 const bidListInserted: any[] = [];
 
 const siteData: Site[] = require('./asset/sites.json');
@@ -54,6 +55,7 @@ const mvData20191231: MV[] = require('./asset/20191231/mv.json');
 const mvData20200101: MV[] = require('./asset/20200101/mv.json');
 const mvData20200117: MV[] = require('./asset/20200117/mv.json');
 const mvData20200204: MV[] = require('./asset/20200204/mv.json');
+const mvData20210324: MV[] = require('./asset/20210324/mv.json');
 const mvListInserted: any[] = [];
 
 const hvData20200117: HV[] = require('./asset/20200117/hv.json');
@@ -67,18 +69,22 @@ const powerPlanEnergyScheduleData20191231: PowerPlanEnergySchedule[] = require('
 const powerPlanEnergyScheduleData20200101: PowerPlanEnergySchedule[] = require('./asset/20200101/powerPlanEnergySchedule.json');
 const powerPlanEnergyScheduleData20200117: PowerPlanEnergySchedule[] = require('./asset/20200117/powerPlanEnergySchedule.json');
 const powerPlanEnergyScheduleData20200204: PowerPlanEnergySchedule[] = require('./asset/20200204/powerPlanEnergySchedule.json');
+const powerPlanEnergyScheduleData20210324: PowerPlanEnergySchedule[] = require('./asset/20210324/powerPlanEnergySchedule.json');
 const powerPlanEnergyScheduleListInserted: any[] = [];
 
 const orderActivationDocumentCreateData20201231: OrderActivationDocument[] = require('./asset/20191231/orderActivationDocumentCreate.json');
 const orderActivationDocumentCreateData20200117: OrderActivationDocument[] = require('./asset/20200117/orderActivationDocumentCreate.json');
 const orderActivationDocumentCreateData20200204: OrderActivationDocument[] = require('./asset/20200204/orderActivationDocumentCreate.json');
+const orderActivationDocumentCreateData20210324: OrderActivationDocument[] = require('./asset/20210324/orderActivationDocumentCreate.json');
 const orderActivationDocumentInserted20200101: any[] = [];
 const orderActivationDocumentInserted20200117: any[] = [];
 const orderActivationDocumentInserted20200204: any[] = [];
+const orderActivationDocumentInserted20210324: any[] = [];
 
 const orderActivationDocumentEndData20200101: OrderActivationDocument[] = require('./asset/20200101/orderActivationDocumentEnd.json');
 const orderActivationDocumentEndData20200117: OrderActivationDocument[] = require('./asset/20200117/orderActivationDocumentEnd.json');
-const orderActivationDocumentEndData20200204: any[] = require('./asset/20200204/orderActivationDocumentEnd.json');
+const orderActivationDocumentEndData20200204: OrderActivationDocument[] = require('./asset/20200204/orderActivationDocumentEnd.json');
+const orderActivationDocumentEndData20210324: OrderActivationDocument[] = require('./asset/20210324/orderActivationDocumentEnd.json');
 
 describe('Bulk Import', function(): void {
   // jest.setTimeout(1201000000);
@@ -264,6 +270,19 @@ describe('Bulk Import', function(): void {
     });
     expect(response.status).equal(201);
     bidListInserted.push({data: response.data, token: tokenBSP2});
+  });
+
+  it('Insert BID 9 - 20210324', async () => {
+    const bid: Bid = bidData20210324[0];
+    bid.edaRegisteredResourceId = edaListInserted.find(
+        (eda: EDA) =>
+            eda.edaRegisteredResourceMrid === bid.edaRegisteredResourceMrid
+    ).edaRegisteredResourceId;
+    const response = await axios.post(`${BASE_URL_BSP}/api/bid`, bid, {
+      headers: {'x-access-token': tokenBSP1}
+    });
+    expect(response.status).equal(201);
+    bidListInserted.push({data: response.data, token: tokenBSP1});
   });
 
   /**
@@ -674,6 +693,48 @@ describe('Bulk Import', function(): void {
       (site) =>
         site.data.objectAggregationMeteringPoint ===
         mv.objectAggregationMeteringPoint
+    ).data.siteId;
+    const response = await axios.post(`${BASE_URL_DSO}/api/comptage/MV`, mv, {
+      headers: {'x-access-token': tokenDSO2}
+    });
+    expect(response.status).equal(201);
+    mvListInserted.push({data: response.data, token: tokenDSO2});
+  });
+
+  it('Insert MV 1 20210324', async () => {
+    const mv: MV = mvData20210324[0];
+    mv.siteId = siteListInserted.find(
+        (site) =>
+            site.data.objectAggregationMeteringPoint ===
+            mv.objectAggregationMeteringPoint
+    ).data.siteId;
+    const response = await axios.post(`${BASE_URL_DSO}/api/comptage/MV`, mv, {
+      headers: {'x-access-token': tokenDSO3}
+    });
+    expect(response.status).equal(201);
+    mvListInserted.push({data: response.data, token: tokenDSO3});
+  });
+
+  it('Insert MV 2 20210324', async () => {
+    const mv: MV = mvData20210324[1];
+    mv.siteId = siteListInserted.find(
+        (site) =>
+            site.data.objectAggregationMeteringPoint ===
+            mv.objectAggregationMeteringPoint
+    ).data.siteId;
+    const response = await axios.post(`${BASE_URL_DSO}/api/comptage/MV`, mv, {
+      headers: {'x-access-token': tokenDSO3}
+    });
+    expect(response.status).equal(201);
+    mvListInserted.push({data: response.data, token: tokenDSO3});
+  });
+
+  it('Insert MV 3 20210324', async () => {
+    const mv: MV = mvData20210324[2];
+    mv.siteId = siteListInserted.find(
+        (site) =>
+            site.data.objectAggregationMeteringPoint ===
+            mv.objectAggregationMeteringPoint
     ).data.siteId;
     const response = await axios.post(`${BASE_URL_DSO}/api/comptage/MV`, mv, {
       headers: {'x-access-token': tokenDSO2}
@@ -1207,6 +1268,86 @@ describe('Bulk Import', function(): void {
     });
   });
 
+  it('Insert PowerPlanEnergySchedule 1 20210324', async () => {
+    const powerPlanEnergySchedule: PowerPlanEnergySchedule =
+        powerPlanEnergyScheduleData20210324[0];
+    powerPlanEnergySchedule.edpRegisteredResourceId = edpListInserted.find(
+        (edp: EDP) =>
+            edp.edpRegisteredResourceMrid ===
+            powerPlanEnergySchedule.edpRegisteredResourceMrid
+    ).edpRegisteredResourceId;
+    const response = await axios.post(
+        `${BASE_URL_BSP}/api/powerPlanEnergySchedule`,
+        powerPlanEnergySchedule,
+        {headers: {'x-access-token': tokenBSP1}}
+    );
+    expect(response.status).equal(201);
+    powerPlanEnergyScheduleListInserted.push({
+      data: response.data,
+      token: tokenBSP1
+    });
+  });
+
+  it('Insert PowerPlanEnergySchedule 2 20210324', async () => {
+    const powerPlanEnergySchedule: PowerPlanEnergySchedule =
+        powerPlanEnergyScheduleData20210324[1];
+    powerPlanEnergySchedule.edpRegisteredResourceId = edpListInserted.find(
+        (edp: EDP) =>
+            edp.edpRegisteredResourceMrid ===
+            powerPlanEnergySchedule.edpRegisteredResourceMrid
+    ).edpRegisteredResourceId;
+    const response = await axios.post(
+        `${BASE_URL_BSP}/api/powerPlanEnergySchedule`,
+        powerPlanEnergySchedule,
+        {headers: {'x-access-token': tokenBSP1}}
+    );
+    expect(response.status).equal(201);
+    powerPlanEnergyScheduleListInserted.push({
+      data: response.data,
+      token: tokenBSP1
+    });
+  });
+
+  it('Insert PowerPlanEnergySchedule 3 20210324', async () => {
+    const powerPlanEnergySchedule: PowerPlanEnergySchedule =
+        powerPlanEnergyScheduleData20210324[2];
+    powerPlanEnergySchedule.edpRegisteredResourceId = edpListInserted.find(
+        (edp: EDP) =>
+            edp.edpRegisteredResourceMrid ===
+            powerPlanEnergySchedule.edpRegisteredResourceMrid
+    ).edpRegisteredResourceId;
+    const response = await axios.post(
+        `${BASE_URL_BSP}/api/powerPlanEnergySchedule`,
+        powerPlanEnergySchedule,
+        {headers: {'x-access-token': tokenBSP1}}
+    );
+    expect(response.status).equal(201);
+    powerPlanEnergyScheduleListInserted.push({
+      data: response.data,
+      token: tokenBSP1
+    });
+  });
+
+  it('Insert PowerPlanEnergySchedule 4 20210324', async () => {
+    const powerPlanEnergySchedule: PowerPlanEnergySchedule =
+        powerPlanEnergyScheduleData20210324[3];
+    powerPlanEnergySchedule.edpRegisteredResourceId = edpListInserted.find(
+        (edp: EDP) =>
+            edp.edpRegisteredResourceMrid ===
+            powerPlanEnergySchedule.edpRegisteredResourceMrid
+    ).edpRegisteredResourceId;
+    const response = await axios.post(
+        `${BASE_URL_BSP}/api/powerPlanEnergySchedule`,
+        powerPlanEnergySchedule,
+        {headers: {'x-access-token': tokenBSP1}}
+    );
+    expect(response.status).equal(201);
+    powerPlanEnergyScheduleListInserted.push({
+      data: response.data,
+      token: tokenBSP1
+    });
+  });
+
   /**
    * CREATE OrderActivationDocument / END OrderActivationDocument
    * INSERTED BY TSO
@@ -1455,6 +1596,42 @@ describe('Bulk Import', function(): void {
     );
     expect(response.status).equal(200);
   });
+
+  it('Insert orderActivationDocument for automata AUT750 20210324', async () => {
+    const orderActivationDocument: OrderActivationDocument =
+        orderActivationDocumentCreateData20210324[0];
+    const response = await axios.post(
+        `${BASE_URL_TSO}/api/orderActivationDocument`,
+        orderActivationDocument,
+        {
+          headers: {'x-access-token': tokenTSO1}
+        }
+    );
+    expect(response.status).equal(201);
+    const createdOrderActivationDocument: OrderActivationDocument =
+        response.data;
+    orderActivationDocumentInserted20210324.push(
+        createdOrderActivationDocument
+    );
+    console.info('[=====================    ]');
+  });
+
+  it('End orderActivationDocument for automata AUT750 20210324', async () => {
+    const orderActivationDocumentEnd: OrderActivationDocument =
+        orderActivationDocumentEndData20210324[0];
+    const orderActivationDocument = orderActivationDocumentInserted20210324.find(
+        (or: any) =>
+            or.orderActivationDocument.nazaRegisteredResourceMrid ===
+            orderActivationDocumentEnd.nazaRegisteredResourceMrid
+    );
+    const response = await axios.put(
+        `${BASE_URL_TSO}/api/order/orderBySiteActivationDocument/end/${orderActivationDocument.orderActivationDocument.orderId}`,
+        orderActivationDocumentEnd,
+        {headers: {'x-access-token': tokenTSO1}}
+    );
+    expect(response.status).equal(200);
+  });
+
 
   /**
    * Check EDA BY TSO
